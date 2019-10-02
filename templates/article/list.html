@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    首页
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row mt-2">
+    {% for article in articles %}
+        <div class="col-12">
+            <span>
+                    {% for tag in article.tags.all %}
+                        <a href="{% url 'article:article_list' %}?tag={{ tag }}"
+                           class="badge badge-secondary"
+                        >
+                            {{ tag }}
+                        </a>
+                    {% endfor %}
+                </span>
+
+            <h4>
+                <b>
+                    <a href="{% url 'article:article_detail' article.id %}"
+                       style="color: black;">
+                        {{ article.title }}
+                    </a>
+                </b>
+            </h4>
+            <div>
+                <p style="color: gray;">
+                    {{ article.body|slice:'100' }}...
+                </p>
+            </div>
+            <p>
+<!--                <span style="color: green;">-->
+<!--                    {{ article.total_views }} 浏览&nbsp;&nbsp;&nbsp;-->
+<!--                </span>-->
+                <span style="color: blue;">
+                    {{ article.created|date:'Y-m-d' }} 发布&nbsp;&nbsp;&nbsp;
+                </span>
+                <span style="color: darkred;">
+                    {{ article.updated|date:'Y-m-d' }} 更新
+                </span>
+            </p>
+            <hr>
+        </div>
+    {% endfor %}
+</div>
+
+
+
+<div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            {% if articles.has_previous %}
+
+                <a href="?page={{ articles.previous_page_number }}"
+                   class="btn btn-dark"
+                >
+                    {{ articles.previous_page_number }}
+                </a>
+            {% endif %}
+
+            <span class="current btn btn-dark btn-lg">
+                {{ articles.number }}
+            </span>
+
+            {% if articles.has_next %}
+                <a href="?page={{ articles.next_page_number }}"
+                   class="btn btn-dark"
+                >
+                    {{ articles.next_page_number }}
+                </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+</div>
+{% endblock content %}
